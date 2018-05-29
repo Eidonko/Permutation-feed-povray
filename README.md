@@ -1,3 +1,7 @@
 # Permutation-feed-povray
-Creates a PovRay source code to create a 3D representation of a permutation number (see Permutation-numbers) 
+Creates a PovRay source code that in turn creates a 3D representation of a permutation number (see Permutation-numbers) 
+
+Test via
+./feedpovray --input=012345678 --y=3 --z=6 --output=3333.pov --prologue=01.prologue --pigment="pigment { checker color Yellow color MidnightBlue } normal { bumps 0.4 scale 0.2 }  finish { phong 1 }"
+
 https://sites.google.com/site/fractal…
