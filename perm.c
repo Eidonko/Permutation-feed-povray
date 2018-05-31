@@ -46,7 +46,7 @@ char*pl,*pr;
 int i,j,k;
 
 pl= &v[len-2],pr= &v[len-1];
-bzero((char*)overlinedR,cardA);
+memset((char*)overlinedR,0,cardA);
 
 /*5:*/
 #line 131 "perm.w"
