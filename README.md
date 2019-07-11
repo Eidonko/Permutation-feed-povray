@@ -32,12 +32,20 @@ of the observer, which determines the size of the object within the image. It wi
 that value in order to get the desired "view" to the rendered object.
 
 
-Another example follows:
+A second example follows:
 
     ./feedpovray --input=000011222 --y=3 --z=6 --output=000011222.pov --prologue=prologue.2.012222222 --pigment="pigment { checker color Yellow color MidnightBlue } normal { bumps 0.4 scale 0.2 } finish { phong 1 }"
+    povray +P 000011222.pov
 
 The resulting picture is available as 000011222.png.
+
+
+A third example is as follows:
+
+    ./feedpovray --input=001122222222 --y=4 --z=8 --output=001122222222.pov --prologue=prologue.001122222222 --pigment="pigment { checker color Yellow color MidnightBlue } normal { bumps 0.4 scale 0.2 } finish { phong 1 }"
+    povray +P 001122222222.pov
 
 Please share with me the pictures that you create and like the most!
 
 (Eidon@tutanota.com)
+
