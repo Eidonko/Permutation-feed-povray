@@ -23,4 +23,10 @@ All the above is done as follows:
 
 Now open povray and load 001122.pov
 
-https://sites.google.com/site/fractal…
+    povray +P 001122.pov
+
+This should create an image called 001122.png (other filetypes are possible)
+
+Note that currently feedpovray does not adjust the location parameter in the prologue. That is the location
+of the observer, which determines the size of the object within the image. It will be necessary to adjust
+that value in order to get the desired "view" to the rendered object.
