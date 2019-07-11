@@ -175,8 +175,10 @@ main (int argc, char *argv[])
 
 	i = 1;
 	do {	c3d(M, x, y, z, cardM, cardA, offset);
+		/*
 		if (verbose)
 			printf("[%s][%s][%s] ", px, py, pz);
+		 */
 		ix = conv(px, cardA, offset);
 		iy = conv(py, cardA, offset);
 		iz = conv(pz, cardA, offset);
