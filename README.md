@@ -7,7 +7,7 @@ Break the string into three equal parts: "00", "11", "22".
 
 Interpret each part as a ternary number: (0, 4, 8)
 
-Interpret the tuple as a 3D coordinate. Let us call P the corresponding point.
+Interpret the tuple as a 3D point, say P.
 
 Plot at P a unit cube or unit circle.
 
