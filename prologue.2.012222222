@@ -1,0 +1,188 @@
+//Files with predefined colors and textures
+#include "colors.inc"
+#include "glass.inc"
+#include "golds.inc"
+#include "metals.inc"
+#include "stones.inc"
+#include "woods.inc"
+
+// Irregular_Bricks_Ptrn() authors: Ron Parker and Rune S. Johansen
+/* Irregular_Bricks_Ptrn( Mortar Thickness, X-scaling, Variation, Roundness )
+This function pattern creates a pattern of bricks of varying lengths on the x-y plane.
+This can be useful in building walls that don't look like they were built by a computer.
+Note that mortar thickness between bricks can vary somewhat, too.
+
+Mortar Thickness: How thick the mortar should be (0-1)
+       X-scaling: The scaling of the bricks (but not the mortar) in the x direction
+       Variation: The amount by which brick lengths will vary (0=none, 1=100%)
+       Roundness: The roundness of the bricks (0.01=almost rectangular, 1.0=very round)
+
+Sample code:
+plane {-z, 0
+   texture {
+      pigment {
+         Irregular_Bricks_Ptrn (0.1, 1, 0.5, 0.5)
+         color_map {
+            [0.01, rgb 0.9]
+            [0.01, rgb 0.6]
+         }
+      }
+      normal {
+         Irregular_Bricks_Ptrn (0.1, 1, 0.5, 0.5) 2
+      }
+   }
+}*/
+#macro Irregular_Bricks_Ptrn (T, S, V, R)
+   #local FunctionXGrad =
+   function {
+      pattern {
+         gradient x triangle_wave
+         warp {turbulence V*x octaves 1}
+         warp {planar z 0}
+         warp {repeat z offset< 0.5, 5, 0>}
+         rotate -90*x
+      }
+   }
+   #local FunctionYGrad =
+   function {
+      pattern {
+         gradient y triangle_wave
+         translate 0.5*y
+      }
+   }
+   function {
+      pow
+      (1-min(1,
+         (
+            +pow(FunctionXGrad(x/S,y,z)*(1+T/S),1/R*2)
+            +pow(FunctionYGrad(x/S,y,z)*(1+T  ),1/R*2)
+         )
+      ),R/2)
+   }
+#end
+
+
+#declare Glass_Finish=
+finish {
+    specular 1
+    roughness 0.001
+    ambient 0
+    diffuse 0
+    reflection 0.1
+ #if (version<3.1)
+    ior 1.5
+ #end
+}
+
+#declare Glass_Interior = interior {ior 1.5}
+
+#declare Glass =
+texture {
+    pigment { rgbf<1.0, 1.0, 1.0, 0.7> }
+    finish  { Glass_Finish }
+}
+#declare M_Glass = material {texture {Glass} interior {Glass_Interior}}
+
+//This is texture T_Cloud1 added
+//to material M_Water
+
+#declare Water =
+texture {
+    pigment{ rgbf <0.0, 0.0, 1.0, 0.9> }
+    normal {
+        ripples 0.75
+        frequency 10
+    }
+    finish {
+        reflection {0.3, 1 fresnel}
+        conserve_energy
+    }
+    }
+
+
+#include "skies.inc"
+
+#declare Clowds =
+texture {
+        T_Cloud1
+        finish {ambient 0.71 diffuse 0}
+        scale <0.2,0.4,0.2>
+        rotate 30*y
+    }
+
+#declare Water_Int =
+interior {
+    ior 1.33
+}
+
+#declare Clowdy_Water =
+material {
+    texture {Water}
+    texture {Clowds}
+    interior {Water_Int}
+}
+
+//This is texture Rust slightly modified
+//and layered on T_Gold_1A
+
+#declare Rusty =  texture {
+    pigment {
+        granite
+        color_map {
+            [0.0 rgbt <0.89, 0.51, 0.28,0.005>]
+            [0.4 rgbt <0.70, 0.13, 0.00,0.007>]
+            [0.5 rgbt <0.69, 0.41, 0.08,1>]
+            [0.6 rgbt <0.49, 0.31, 0.28,1>]
+            [1.0 rgbt <0.89, 0.51, 0.28,1>]
+            }
+          }
+        }
+
+#include "golds.inc"
+
+
+#declare Rusty_Gold =  texture { T_Gold_1A } texture { Rusty }
+
+//Place the camera
+camera {
+  sky <0,0,1>          //Don't change this
+  direction <-1,0,0>   //Don't change this  
+  right <-4/3,0,0>     //Don't change this
+  //location  <30,10,10>  //Camera location
+    location <1290, 1290, 1290>
+  look_at   <0,0,0>    //Where camera is pointing
+  angle 2      //Angle of the view--increase to see more, decrease to see less
+}
+
+//Ambient light to "brighten up" darker pictures
+global_settings { ambient_light White }
+
+//Place a light--you can have more than one!
+light_source {
+  <310,-10,310>   //Change this if you want to put the light at a different point
+  color White*2        //Multiplying by 2 doubles the brightness
+}
+
+//Set a background color
+background { color White }
+
+//Create a "floor"
+//plane {
+//  <0,0,1>, 0           //This represents the plane 0x+0y+z=0
+//  texture { Glass }  //The texture comes from the file "metals.inc"
+//}
+
+plane {-z, 0
+   texture {
+      pigment {
+         Irregular_Bricks_Ptrn (0.1, 1, 0.5, 0.5)
+         color_map {
+            [0.01, rgb 0.9]
+            [0.01, rgb 0.6]
+         }
+      }
+      normal {
+         Irregular_Bricks_Ptrn (0.1, 1, 0.5, 0.5) 2
+      }
+   }
+}
