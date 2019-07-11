@@ -1,5 +1,5 @@
 # Permutation-feed-povray
-Creates a PovRay source code that in turn creates a 3D representation of a permutation number (see Permutation-numbers) 
+Creates a PovRay source code that in turn creates a 3D representation of a permutation number (see also https://github.com/Eidonko/CombinatorialMusic) 
 
 Say you have the following string, "001122"
 
