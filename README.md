@@ -38,6 +38,6 @@ Another example follows:
 
 The resulting picture is available as 000011222.png.
 
-Please share with me the pictures that you create and like most!
+Please share with me the pictures that you create and like the most!
 
 (Eidon@tutanota.com)
