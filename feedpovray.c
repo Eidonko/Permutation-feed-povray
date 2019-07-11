@@ -175,11 +175,13 @@ main (int argc, char *argv[])
 
 	i = 1;
 	do {	c3d(M, x, y, z, cardM, cardA, offset);
-		printf("[%s][%s][%s] ", px, py, pz);
+		if (verbose)
+			printf("[%s][%s][%s] ", px, py, pz);
 		ix = conv(px, cardA, offset);
 		iy = conv(py, cardA, offset);
 		iz = conv(pz, cardA, offset);
-		printf("[%d][%d][%d]\n", ix, iy, iz);
+		if (verbose)
+			printf("[%d][%d][%d]\n", ix, iy, iz);
 		fprintf(f, "\n// Box no. %d\n", i);
 		fprintf(f, "box {\n");
 		fprintf(f, "\t<%d,%d,%d>, <%f,%f,%f>\n", ix, iy, iz,
