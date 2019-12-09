@@ -45,6 +45,17 @@ A third example is as follows:
     ./feedpovray --input=001122222222 --y=4 --z=8 --output=001122222222.pov --prologue=prologue.001122222222 --pigment="pigment { checker color Yellow color MidnightBlue } normal { bumps 0.4 scale 0.2 } finish { phong 1 }"
     povray +P 001122222222.pov
 
+
+More formally, given an input string s, with len(s) == *n* > 2,
+
+    feedpovray --input=0123456789 --𝐲 =A --𝐳=B 
+
+with 0 < A < B
+
+identifies points P = (*x*, *y*, *z*) by interpreting as numbers the characters (s\[0..A-1\], s\[A..B-1\], s\[B..*n*-1\]).
+
+The interpretation is in base B, where B is minimum base that can express s; in other words, you interpret each s\[*i*\] as a digit and set B as max (s\[*i*\]) + 1, *i*=0,...,*n*-1.
+
 Please share with me the pictures that you create and like the most!
 
 (Eidon@tutanota.com)
