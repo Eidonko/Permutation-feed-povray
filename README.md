@@ -48,7 +48,7 @@ A third example is as follows:
 
 More formally, given an input string s, with len(s) == *n* > 2,
 
-    feedpovray --input=0123456789 --𝐲 =A --𝐳=B 
+    feedpovray --input=s --𝐲 =A --𝐳=B 
 
 with 0 < A < B
 
