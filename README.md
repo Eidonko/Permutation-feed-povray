@@ -56,6 +56,11 @@ identifies points P = (*x*, *y*, *z*) by interpreting as numbers the characters 
 
 The interpretation is in base B, where B is minimum base that can express s; in other words, you interpret each s\[*i*\] as a digit and set B as max (s\[*i*\]) + 1, *i*=0,...,*n*-1.
 
+# Latest changes
+
+- Feedpovray now generates spheres instead of cubes.
+- Added argument --max-size=_x_ that instructs feedpovray so as to generate spheres of radius _r_, where _r_ is a random number in 1.._x_.
+
 Please share with me the pictures that you create and like the most!
 
 (Eidon@tutanota.com)
