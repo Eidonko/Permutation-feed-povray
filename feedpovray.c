@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 extern char M[];
 extern int  cardM;
@@ -15,6 +17,13 @@ extern void err();
 #include "perm.h"
 #include "sc.h"
 #include "sf.h"
+
+long random_at_most(long max);
+int initialize (char *s, int *sl, int *cl, int *offset);
+int c3d(char *M, int x, int y, int z, int cardM, int cardA, int offset);
+int conv(char *p, int base, int offset);
+char* successor(char*v, int len);
+long ptol(char *v, long *ret, long *dis);
 
 #define PROLOGUE(a) \
        "\
@@ -70,7 +79,7 @@ int analize;
 
 static char *px, *py, *pz;
 
-main (int argc, char *argv[])
+int main (int argc, char *argv[])
 {	int   i, x, y, z;
 	int   ix, iy, iz;
 	char *pstr,
@@ -81,6 +90,8 @@ main (int argc, char *argv[])
 	int max;
 	char *prologue = NULL;
 	char *pigment = NULL;
+	int max_size = 1;
+	long ltmp;
 
 
 	ofile = "stdout";
@@ -123,6 +134,9 @@ main (int argc, char *argv[])
 		}
 		else if (strncmp(argv[i], "--pigment=", 10)==0)
 		{	pigment = argv[i] + 10;
+		}
+		else if (strncmp(argv[i], "--max-size=", 11)==0)
+		{	max_size = atoi(argv[i] + 11);
 		}
 		else
 		{	ferr("args");
@@ -184,10 +198,21 @@ main (int argc, char *argv[])
 		iz = conv(pz, cardA, offset);
 		if (verbose)
 			printf("[%d][%d][%d]\n", ix, iy, iz);
+#if BOXES
 		fprintf(f, "\n// Box no. %d\n", i);
 		fprintf(f, "box {\n");
 		fprintf(f, "\t<%d,%d,%d>, <%f,%f,%f>\n", ix, iy, iz,
 			ix + side, iy + side, iz + side);
+#else
+		fprintf(f, "sphere {\n");
+		if (max_size <= 1)
+			fprintf(f, "\t<%d,%d,%d>, 1\n", ix, iy, iz);
+		else {
+			ltmp = random_at_most( (long)max_size);
+			if (ltmp == 0L) ltmp = 1L;
+			fprintf(f, "\t<%d,%d,%d>, %ld\n", ix, iy, iz, ltmp);
+		}
+#endif
 		//fprintf(f, "%s\n", pIGMENT);
 		if (pigment) {
 			fprintf(f, "%s\n", pigment);
@@ -222,7 +247,7 @@ void help(void)
 	fprintf(stderr, "feed-povray: creates a Povray script from a permutation file\n");
 	fprintf(stderr, "Arguments: --input=string --output=filename\n");
 	fprintf(stderr, "           --x=offset_x --y=offset_y --z=offset_z\n");
-	fprintf(stderr, "           --verbose\n");
+	fprintf(stderr, "           --max-size=max_radius --verbose\n");
 	exit(-1);
 }
 
@@ -242,7 +267,7 @@ void fprintv(FILE*file,char*v){
 	{
 #    endif
 
-	fprintf(file,"%d\t",ord);
+	fprintf(file,"%ld\t",ord);
 	for(l= 0L,i= 0;i<cardM;i++)
 	putc(v[i]+offset,file);
 #       ifdef QUANTUM
@@ -294,7 +319,7 @@ int c3d(char *M, int x, int y, int z, int cardM, int cardA, int offset)
 	}
 }
 
-conv(char *p, int base, int offset)
+int conv(char *p, int base, int offset)
 {
 	int n;
 	int f;
@@ -317,6 +342,30 @@ conv(char *p, int base, int offset)
 		n = n*base + *p++ - offset;
 	return(f? -n: n);
 }
+
+// https://stackoverflow.com/questions/2509679/how-to-generate-a-random-integer-number-from-within-a-range
+long random_at_most(long max) {
+  unsigned long
+    // max <= RAND_MAX < ULONG_MAX, so this is okay.
+    num_bins = (unsigned long) max + 1,
+    num_rand = (unsigned long) RAND_MAX + 1,
+    bin_size = num_rand / num_bins,
+    defect   = num_rand % num_bins;
+
+  long x;
+
+  srandom( time(0)+clock()+random() ); // added
+  do {
+   x = random();
+  }
+  // This is carefully written not to overflow
+  while (num_rand - defect <= (unsigned long)x);
+
+  // Truncated division is intentional
+  return x/bin_size;
+}
+
+
 /*
       box {
         <-1,0  ,-1>,     // Near lower left corner
