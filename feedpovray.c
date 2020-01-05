@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdbool.h>
 
 extern char M[];
 extern int  cardM;
@@ -24,6 +25,7 @@ int c3d(char *M, int x, int y, int z, int cardM, int cardA, int offset);
 int conv(char *p, int base, int offset);
 char* successor(char*v, int len);
 long ptol(char *v, long *ret, long *dis);
+bool flip();
 
 #define PROLOGUE(a) \
        "\
@@ -143,6 +145,8 @@ int main (int argc, char *argv[])
 		}
 	}
 
+	if (max_size <= 1) max_size = 1;
+
 	if (verbose)
 	{	fprintf(stderr, "output file = %s\n", ofile);
 	}
@@ -198,6 +202,20 @@ int main (int argc, char *argv[])
 		iz = conv(pz, cardA, offset);
 		if (verbose)
 			printf("[%d][%d][%d]\n", ix, iy, iz);
+#ifdef BOTH
+		ltmp = random_at_most( (long)max_size);
+		if (ltmp == 0L) ltmp = 1L;
+		if (flip()) {
+			fprintf(f, "\n// Box no. %d\n", i);
+			fprintf(f, "box {\n");
+			fprintf(f, "\t<%d,%d,%d>, <%f,%f,%f>\n", ix, iy, iz,
+				ix + (float)ltmp, iy + (float)ltmp, iz + (float)ltmp);
+
+		} else {
+			fprintf(f, "sphere {\n");
+			fprintf(f, "\t<%d,%d,%d>, %f\n", ix, iy, iz, ltmp - 0.3);
+		}
+#else
 #if BOXES
 		fprintf(f, "\n// Box no. %d\n", i);
 		fprintf(f, "box {\n");
@@ -210,8 +228,9 @@ int main (int argc, char *argv[])
 		else {
 			ltmp = random_at_most( (long)max_size);
 			if (ltmp == 0L) ltmp = 1L;
-			fprintf(f, "\t<%d,%d,%d>, %ld\n", ix, iy, iz, ltmp);
+			fprintf(f, "\t<%d,%d,%d>, %f\n", ix, iy, iz, ltmp - 0.3);
 		}
+#endif
 #endif
 		//fprintf(f, "%s\n", pIGMENT);
 		if (pigment) {
@@ -365,6 +384,10 @@ long random_at_most(long max) {
   return x/bin_size;
 }
 
+bool flip() {
+	if (random_at_most(1L) == 1L) return true;
+	return false;
+}
 
 /*
       box {
